@@ -1,0 +1,32 @@
+spring:
+  # thymeleaf
+  thymeleaf:
+    cache: false
+
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/goodskill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    hikari:
+      pool-name: DateHikariCP
+      minimum-idle: 5
+      idle-timeout: 180000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 180000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  # mybatis-plus
+  mybatis-plus:
+    mapper-locations: classpath*:/mapper/*Mapper.xml
+    type-aliases-package: com.rany.seckill.pojo
+
+  # SQL打印
+  logging:
+    level:
+      com.rany.secondkill.mapper: debug
+
+
