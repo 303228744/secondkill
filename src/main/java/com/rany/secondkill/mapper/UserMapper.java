@@ -1,7 +1,8 @@
-package com.rany.secondkill.mapper;
+package com.rany.secondkill.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rany.secondkill.pojo.User;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +12,7 @@ import com.rany.secondkill.pojo.User;
  * @author rany
  * @since 2023-03-02
  */
+@Repository
 public interface UserMapper extends BaseMapper<User> {
 
 }
