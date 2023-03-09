@@ -1,4 +1,4 @@
-package com.rany.secondkill.controller;
+package controller;
 
 
 import org.springframework.stereotype.Controller;

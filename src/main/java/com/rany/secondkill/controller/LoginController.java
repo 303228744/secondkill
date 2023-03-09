@@ -1,4 +1,4 @@
-package com.rany.secondkill.controller;
+package controller;
 
 import com.rany.secondkill.service.IUserService;
 import com.rany.secondkill.vo.LoginVo;
@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/login")
@@ -24,8 +26,9 @@ public class LoginController {
 
     @RequestMapping("/doLogin")
     @ResponseBody
-    public RespBean dologin(LoginVo loginVo) {
-        return userService.doLogin(loginVo);
+    public RespBean dologin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("???");
+        return userService.doLogin(loginVo, request, response);
     }
 
 }
