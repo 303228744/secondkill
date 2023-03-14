@@ -1,4 +1,4 @@
-package com.rany.secondkill.service.mapper;
+package com.rany.secondkill.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rany.secondkill.pojo.User;

@@ -1,7 +1,7 @@
 package com.rany.secondkill.service;
 
-import com.rany.secondkill.pojo.SeckillGoods;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.rany.secondkill.pojo.SeckillGoods;
 
 /**
  * <p>

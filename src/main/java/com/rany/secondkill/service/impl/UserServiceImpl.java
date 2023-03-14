@@ -1,18 +1,23 @@
 package com.rany.secondkill.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rany.secondkill.exception.GlobalException;
 import com.rany.secondkill.mapper.UserMapper;
 import com.rany.secondkill.pojo.User;
 import com.rany.secondkill.service.IUserService;
+import com.rany.secondkill.uitls.CookieUtil;
 import com.rany.secondkill.uitls.MD5Util;
-import com.rany.secondkill.uitls.validatorUtil;
+import com.rany.secondkill.uitls.UUIDUtil;
 import com.rany.secondkill.vo.LoginVo;
 import com.rany.secondkill.vo.RespBean;
 import com.rany.secondkill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -28,34 +33,51 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
-    public RespBean doLogin(LoginVo loginVo) {
+    public RespBean doLogin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
 
         String mobile = loginVo.getMobile();
         String password = loginVo.getPassword();
 
-        // 参数校验
-        // 校验手机号与密码是否为空
-        if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(password)) {
-            return RespBean.error(RespBeanEnum.LOGIN_ERROR);
-        }
-
-        // 校验手机号格式
-        if (validatorUtil.isMobile(mobile)) {
-            return RespBean.error(RespBeanEnum.MOBILE_ERROR);
-        }
+        System.out.println(password);
 
         // 根据手机号选取用户
         User user = userMapper.selectById(mobile);
         if (user == null) {
-            return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+            throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
         }
 
         // 校验密码是否正确
         if (!MD5Util.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
-            return RespBean.error(RespBeanEnum.LOGIN_ERROR);
+            System.out.println(MD5Util.formPassToDBPass(password, user.getSalt()));
+            System.out.println(user.getPassword());
+            throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
         }
 
-        return RespBean.success();
+        // 生成 cookie
+        String ticket = UUIDUtil.uuid();
+        //request.getSession().setAttribute(ticket, user);
+        redisTemplate.opsForValue().set("user:" + ticket, user);
+        CookieUtil.setCookie(request, response, "userTicket", ticket);
+
+        //System.out.println(user.toString());
+
+        return RespBean.success(ticket);
+    }
+
+    // 根据 cookie 获取 value
+    @Override
+    public User getUserByCookie(String userTicket, HttpServletRequest request, HttpServletResponse response) {
+        if (StringUtils.isEmpty(userTicket)) {
+            return null;
+        }
+        User user = (User) redisTemplate.opsForValue().get("user:" + userTicket);
+        if (user != null) {
+            CookieUtil.setCookie(request, response, "userTicket", userTicket);
+        }
+        return user;
     }
 }

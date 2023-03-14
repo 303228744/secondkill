@@ -1,7 +1,5 @@
 package com.rany.secondkill.validator;
 
-import com.rany.secondkill.vo.IsMobileValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;

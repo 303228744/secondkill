@@ -1,9 +1,9 @@
 package com.rany.secondkill.service.impl;
 
-import com.rany.secondkill.pojo.SeckillOrder;
-import com.rany.secondkill.mapper.SeckillOrderMapper;
-import com.rany.secondkill.service.ISeckillOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rany.secondkill.mapper.SeckillOrderMapper;
+import com.rany.secondkill.pojo.SeckillOrder;
+import com.rany.secondkill.service.ISeckillOrderService;
 import org.springframework.stereotype.Service;
 
 /**

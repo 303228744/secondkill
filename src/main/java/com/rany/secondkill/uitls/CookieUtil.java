@@ -1,4 +1,4 @@
-package com.example.seckilldemo.utils;
+package com.rany.secondkill.uitls;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -7,33 +7,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-/**
- * Cookie工具类
- *
- * @author: LC
- * @date 2022/3/2 5:48 下午
- * @ClassName: CookieUtil
- */
 public final class CookieUtil {
 
-    /**
-     * 得到Cookie的值, 不编码
-     *
-     * @param request
-     * @param cookieName
-     * @return
-     */
+
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
         return getCookieValue(request, cookieName, false);
     }
 
-    /**
-     * 得到Cookie的值,
-     *
-     * @param request
-     * @param cookieName
-     * @return
-     */
     public static String getCookieValue(HttpServletRequest request, String cookieName, boolean isDecoder) {
         Cookie[] cookieList = request.getCookies();
         if (cookieList == null || cookieName == null) {
@@ -57,13 +37,6 @@ public final class CookieUtil {
         return retValue;
     }
 
-    /**
-     * 得到Cookie的值,
-     *
-     * @param request
-     * @param cookieName
-     * @return
-     */
     public static String getCookieValue(HttpServletRequest request, String cookieName, String encodeString) {
         Cookie[] cookieList = request.getCookies();
         if (cookieList == null || cookieName == null) {
@@ -83,59 +56,36 @@ public final class CookieUtil {
         return retValue;
     }
 
-    /**
-     * 设置Cookie的值 不设置生效时间默认浏览器关闭即失效,也不编码
-     */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue) {
         setCookie(request, response, cookieName, cookieValue, -1);
     }
 
-    /**
-     * 设置Cookie的值 在指定时间内生效,但不编码
-     */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage) {
         setCookie(request, response, cookieName, cookieValue, cookieMaxage, false);
     }
 
-    /**
-     * 设置Cookie的值 不设置生效时间,但编码
-     */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, boolean isEncode) {
         setCookie(request, response, cookieName, cookieValue, -1, isEncode);
     }
 
-    /**
-     * 设置Cookie的值 在指定时间内生效, 编码参数
-     */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage, boolean isEncode) {
         doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, isEncode);
     }
 
-    /**
-     * 设置Cookie的值 在指定时间内生效, 编码参数(指定编码)
-     */
     public static void setCookie(HttpServletRequest request, HttpServletResponse response, String cookieName,
                                  String cookieValue, int cookieMaxage, String encodeString) {
         doSetCookie(request, response, cookieName, cookieValue, cookieMaxage, encodeString);
     }
 
-    /**
-     * 删除Cookie带cookie域名
-     */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response,
                                     String cookieName) {
         doSetCookie(request, response, cookieName, "", -1, false);
     }
 
-    /**
-     * 设置Cookie的值，并使其在指定时间内生效
-     *
-     * @param cookieMaxage cookie生效的最大秒数
-     */
     private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
                                           String cookieName, String cookieValue, int cookieMaxage, boolean isEncode) {
         try {
@@ -161,11 +111,6 @@ public final class CookieUtil {
         }
     }
 
-    /**
-     * 设置Cookie的值，并使其在指定时间内生效
-     *
-     * @param cookieMaxage cookie生效的最大秒数
-     */
     private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
                                           String cookieName, String cookieValue, int cookieMaxage, String encodeString) {
         try {
@@ -192,9 +137,6 @@ public final class CookieUtil {
         }
     }
 
-    /**
-     * 得到cookie的域名
-     */
     private static final String getDomainName(HttpServletRequest request) {
         String domainName = null;
         // 通过request对象获取访问的url地址
@@ -222,7 +164,8 @@ public final class CookieUtil {
             int len = domains.length;
             if (len > 3) {
                 // www.xxx.com.cn
-                domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+                //domainName = domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
+                domainName = domains[len - 4]+ "."+domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
                 // xxx.com or xxx.cn
                 domainName = domains[len - 2] + "." + domains[len - 1];

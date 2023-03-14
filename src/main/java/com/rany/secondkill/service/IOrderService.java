@@ -1,7 +1,9 @@
 package com.rany.secondkill.service;
 
-import com.rany.secondkill.pojo.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.rany.secondkill.pojo.Order;
+import com.rany.secondkill.pojo.User;
+import com.rany.secondkill.vo.GoodsVo;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrderService extends IService<Order> {
 
+    Order secKill(User user, GoodsVo goods);
 }

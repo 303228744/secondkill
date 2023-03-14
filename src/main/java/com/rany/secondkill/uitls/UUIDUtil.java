@@ -1,14 +1,8 @@
-package com.example.seckilldemo.utils;
+package com.rany.secondkill.uitls;
 
 import java.util.UUID;
 
-/**
- * UUID工具类
- *
- * @author: LC
- * @date 2022/3/2 5:46 下午
- * @ClassName: UUIDUtil
- */
+
 public class UUIDUtil {
 
     public static String uuid() {

@@ -1,6 +1,7 @@
 package com.rany.secondkill.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.rany.secondkill.pojo.Goods;
 import com.rany.secondkill.vo.GoodsVo;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,6 @@ import java.util.List;
 public interface GoodsMapper extends BaseMapper<Goods> {
 
     List<GoodsVo> findGoodsVo();
+
+    GoodsVo findGoodsVoByGoodsId(Long goodsId);
 }

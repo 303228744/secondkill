@@ -29,4 +29,23 @@ spring:
     level:
       com.rany.secondkill.mapper: debug
 
+  # redis
+  redis:
+    # 服务器地址
+    host: 127.0.0.1
+    # 端口
+    port: 6379
+    # 数据库
+    database: 0
+    # 超时时间
+    timeout: 10000ms
+    # 连接池
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: 1000ms
+        max-idle: 200
+        min-idle: 5
+
+
 

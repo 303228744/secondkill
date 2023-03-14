@@ -14,7 +14,7 @@ public class MD5Util {
     private static final String salt = "1a2b3c4d";
 
     public static String inputPassToFromPass(String inputPass) {
-        String str = salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
+        String str = "" + salt.charAt(0) + salt.charAt(2) + inputPass + salt.charAt(5) + salt.charAt(4);
         return md5(str);
     }
 
@@ -29,5 +29,9 @@ public class MD5Util {
         return dbPass;
     }
 
-    
+    public static void main(String[] args) {
+        String password = "123456";
+        System.out.println(inputPassToFromPass(password));
+        System.out.println(inputPassToDBPass(password, salt));
+    }
 }

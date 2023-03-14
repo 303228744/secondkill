@@ -1,7 +1,6 @@
-package com.rany.secondkill.vo;
+package com.rany.secondkill.validator;
 
-import com.rany.secondkill.uitls.validatorUtil;
-import com.rany.secondkill.validator.IsMobile;
+import com.rany.secondkill.uitls.ValidatorUtil;
 import org.thymeleaf.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
@@ -19,12 +18,12 @@ public class IsMobileValidator implements ConstraintValidator<IsMobile, String> 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (required) {
-            return validatorUtil.isMobile(value);
+            return ValidatorUtil.isMobile(value);
         } else {
             if (StringUtils.isEmpty(value)) {
                 return true;
             } else {
-                return validatorUtil.isMobile(value);
+                return ValidatorUtil.isMobile(value);
             }
         }
     }

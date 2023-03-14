@@ -1,4 +1,4 @@
-package controller;
+package com.rany.secondkill.controller;
 
 import com.rany.secondkill.service.IUserService;
 import com.rany.secondkill.vo.LoginVo;
@@ -27,7 +27,6 @@ public class LoginController {
     @RequestMapping("/doLogin")
     @ResponseBody
     public RespBean dologin(LoginVo loginVo, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("???");
         return userService.doLogin(loginVo, request, response);
     }
 
