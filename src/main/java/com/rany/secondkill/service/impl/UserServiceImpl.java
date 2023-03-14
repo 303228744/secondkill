@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,8 +41,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         String mobile = loginVo.getMobile();
         String password = loginVo.getPassword();
 
-        System.out.println(password);
-
         // 根据手机号选取用户
         User user = userMapper.selectById(mobile);
         if (user == null) {
@@ -52,18 +49,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         // 校验密码是否正确
         if (!MD5Util.formPassToDBPass(password, user.getSalt()).equals(user.getPassword())) {
-            System.out.println(MD5Util.formPassToDBPass(password, user.getSalt()));
-            System.out.println(user.getPassword());
             throw new GlobalException(RespBeanEnum.LOGIN_ERROR);
         }
 
         // 生成 cookie
         String ticket = UUIDUtil.uuid();
-        //request.getSession().setAttribute(ticket, user);
         redisTemplate.opsForValue().set("user:" + ticket, user);
         CookieUtil.setCookie(request, response, "userTicket", ticket);
-
-        //System.out.println(user.toString());
 
         return RespBean.success(ticket);
     }
