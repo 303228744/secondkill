@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.rany.secondkill.pojo.Order;
 import com.rany.secondkill.pojo.User;
 import com.rany.secondkill.vo.GoodsVo;
+import com.rany.secondkill.vo.OrderDetailVo;
 
 /**
  * <p>
@@ -16,4 +17,6 @@ import com.rany.secondkill.vo.GoodsVo;
 public interface IOrderService extends IService<Order> {
 
     Order secKill(User user, GoodsVo goods);
+
+    OrderDetailVo detail(Long orderId);
 }

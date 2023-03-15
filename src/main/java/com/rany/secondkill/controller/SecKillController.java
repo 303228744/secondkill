@@ -9,11 +9,13 @@ import com.rany.secondkill.service.IGoodsService;
 import com.rany.secondkill.service.IOrderService;
 import com.rany.secondkill.service.ISeckillOrderService;
 import com.rany.secondkill.vo.GoodsVo;
+import com.rany.secondkill.vo.RespBean;
 import com.rany.secondkill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/secKill")
@@ -29,26 +31,25 @@ public class SecKillController {
     private IOrderService orderService;
 
     @RequestMapping("/doSecKill")
-    public String doSecKill(Model model, User user, Long goodsId) {
+    @ResponseBody
+    public RespBean doSecKill(Model model, User user, Long goodsId) {
         if (user == null) {
-            return "login";
+            return RespBean.error(RespBeanEnum.DOSECKILL_ERROR);
         }
-        model.addAttribute("user", user);
         GoodsVo goods = goodsService.findGoodsVoByGoodsId(goodsId);
+
         if (goods.getStockCount() < 1) {
-            model.addAttribute("errmsg", RespBeanEnum.EMPTY_STOCK.getMessage());
-            return "secKillFail";
+            return RespBean.error(RespBeanEnum.EMPTY_STOCK);
         }
+
         SeckillOrder seckillOrder = seckillOrderService.getOne(new QueryWrapper<SeckillOrder>().eq("user_id", user.getId()).eq("goods_id", goodsId));
+
         if (seckillOrder != null) {
-            model.addAttribute("errmsg", RespBeanEnum.REPEATE_ERROR.getMessage());
+            return RespBean.error(RespBeanEnum.REPEATE_ERROR);
         }
 
         Order order = orderService.secKill(user, goods);
-        model.addAttribute("order", order);
-        model.addAttribute("goods", goods);
-
-        return "orderDetail";
+        return RespBean.success(order);
     }
 
 

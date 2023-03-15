@@ -2,7 +2,9 @@ package com.rany.secondkill.controller;
 
 import com.rany.secondkill.pojo.User;
 import com.rany.secondkill.service.IGoodsService;
+import com.rany.secondkill.vo.DetailVo;
 import com.rany.secondkill.vo.GoodsVo;
+import com.rany.secondkill.vo.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -53,15 +55,9 @@ public class GoodsController {
     }
 
     // 跳转商品详情页
-    @RequestMapping(value = "/toDetail/{goodsId}", produces = "text/html;charset=utf-8")
+    @RequestMapping("/detail/{goodsId}")
     @ResponseBody
-    public String toDetail(Model model, User user, @PathVariable Long goodsId, HttpServletRequest req, HttpServletResponse resp) {
-        ValueOperations valueOperations = redisTemplate.opsForValue();
-        String html = (String) valueOperations.get("goodsDetail:" + goodsId);
-        if(!StringUtils.isEmpty(html)) {
-            return html;
-        }
-        model.addAttribute("user", user);
+    public RespBean toDetail(Model model, User user, @PathVariable Long goodsId) {
         GoodsVo goodsVo = goodsService.findGoodsVoByGoodsId(goodsId);
         Date startDate = goodsVo.getStartDate();
         Date endDate = goodsVo.getEndDate();
@@ -77,16 +73,13 @@ public class GoodsController {
             secKillStatus = 1;
             remainSeconds = 0;
         }
-        model.addAttribute("remainSeconds", remainSeconds);
-        model.addAttribute("secKillStatus", secKillStatus);
-        model.addAttribute("goods", goodsVo);
-        model.addAttribute("goodsVo", goodsService.findGoodsVoByGoodsId(goodsId));
+        DetailVo detailVo = new DetailVo();
+        detailVo.setUser(user);
+        detailVo.setGoodsVo(goodsVo);
+        detailVo.setSecKillStatus(remainSeconds);
+        detailVo.setRemainSeconds(secKillStatus);
 
-        WebContext context = new WebContext(req, resp, req.getServletContext(), req.getLocale(), model.asMap());
-        html = thymeleafViewResolver.getTemplateEngine().process("goodsDetail", context);
-        if (!StringUtils.isEmpty(html)) {
-            valueOperations.set("goodsDetail:" + goodsId, html, 60, TimeUnit.SECONDS);
-        }
-        return html;
+        return RespBean.success(detailVo);
     }
+
 }
