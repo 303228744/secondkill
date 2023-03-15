@@ -14,7 +14,9 @@ import com.rany.secondkill.vo.GoodsVo;
 import com.rany.secondkill.vo.OrderDetailVo;
 import com.rany.secondkill.vo.RespBeanEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -39,12 +41,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
 
+    @Transactional
     @Override
     public Order secKill(User user, GoodsVo goods) {
+
+        /*
+        利用增加索引后的 mysql 的行操作排斥性做悲观锁
+         */
+
         SeckillGoods seckillGoods = seckillGoodsService.getOne(new QueryWrapper<SeckillGoods>().eq("goods_id", goods.getId()));
-        seckillGoods.setStockCount(seckillGoods.getStockCount() - 1);
-        seckillGoodsService.updateById(seckillGoods);
+        boolean result = seckillGoodsService.update(new UpdateWrapper<SeckillGoods>().setSql("stock_count = " + "stock_count - 1").eq("goods_id", goods.getId()).gt("stock_count", 0));
+        if (!result) {
+            return null;
+        }
 
         // 生成订单
         Order order = new Order();
@@ -65,6 +77,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         seckillOrder.setOrderId(order.getId());
         seckillOrder.setGoodsId(goods.getId());
         seckillOrderService.save(seckillOrder);
+
+        redisTemplate.opsForValue().set("order:" + user.getId() + ":" + goods.getId(), seckillOrder);
 
         return order;
     }
